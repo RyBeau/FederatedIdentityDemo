@@ -2,7 +2,7 @@ CREATE DATABASE IF NOT EXISTS AUTH_DEMO;
 
 CREATE TABLE roles (
     id int AUTO_INCREMENT,
-    role VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -15,11 +15,11 @@ CREATE TABLE users (
     FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
-INSERT INTO roles (role)
+INSERT INTO roles (name)
 VALUES ('Admin');
-INSERT INTO roles (role)
+INSERT INTO roles (name)
 VALUES ('Developer');
-INSERT INTO roles (role)
+INSERT INTO roles (name)
 VALUES ('Basic');
 
 INSERT INTO users (username, password, role_id)
