@@ -10,7 +10,7 @@
 
         public string GetConnectionString()
         {
-            return $"server={Host}; port={Port}; database{Name}; user={Username}; password={Password}";
+            return $"server={Host}; port={Port}; database={Name}; user={Username}; password={Password}";
         }
     }
 }

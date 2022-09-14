@@ -1,12 +1,21 @@
-﻿using MediatR;
+﻿using AuthAPI.Responses;
+using AuthAPI.Services.DB;
+using MediatR;
 
 namespace AuthAPI.Handlers.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, string>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, UserSummary>
     {
-        public Task<string> Handle(LoginQuery request, CancellationToken cancellationToken)
+        private readonly Repository _repository;
+
+        public LoginQueryHandler(Repository repository)
         {
-            return Task.FromResult($"Login successful for {request.Username}");
+              _repository = repository;
+        }
+
+        public Task<UserSummary> Handle(LoginQuery request, CancellationToken cancellationToken)
+        {
+            return _repository.GetUser(request.Username, request.Password);
         }
     }
 }

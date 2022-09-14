@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Services.DB;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace AuthAPI
 {
@@ -23,10 +24,12 @@ namespace AuthAPI
 
             var dbConfig = _config.GetSection("database").Get<DbConfiguration>();
             services.AddDbContext<Context>(options => 
-                options.UseMySql(dbConfig.GetConnectionString(), ServerVersion.AutoDetect(dbConfig.GetConnectionString()
-                    )
+                options.UseMySql(dbConfig.GetConnectionString(), 
+                ServerVersion.AutoDetect(dbConfig.GetConnectionString())
                 )
             );
+
+            services.AddScoped<Repository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
