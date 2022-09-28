@@ -15,7 +15,7 @@ namespace AuthAPI.Services.DB
             _dbContext = dbContext;
         }
 
-        public Task<UserSummary> GetUser(string username, string password)
+        public Task<UserSummary?> GetUser(string username, string password)
         {
             using (SHA256 sha256 = SHA256.Create())
             {
@@ -30,17 +30,16 @@ namespace AuthAPI.Services.DB
                             username = s.Username,
                             role = r.Name
                         })
-                    .SingleAsync();
+                    .FirstOrDefaultAsync();
             }
         }
 
-           
-
-        public Task<Role> GetRole(int roleId)
+        public Task<Role?> GetRole(int roleId)
         {
             return _dbContext.Roles
                 .Where(r => r.Id == roleId)
-                .SingleAsync();
+                .DefaultIfEmpty(null)
+                .FirstOrDefaultAsync();
         }
     }
 }
