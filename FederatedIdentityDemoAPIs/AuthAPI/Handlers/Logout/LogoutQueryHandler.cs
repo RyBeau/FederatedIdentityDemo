@@ -1,4 +1,4 @@
-﻿using AuthAPI.Services.Redis;
+﻿using FederatedIdentityDemo.Shared.Services.Redis;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 
@@ -17,10 +17,11 @@ namespace AuthAPI.Handlers.Logout
         public async Task<bool> Handle(LogoutQuery request, CancellationToken cancellationToken)
         {
             try
-            { 
+            {
                 await _cache.RemoveRecordAsync(request.SessionId);
                 return true;
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 return false;
             }

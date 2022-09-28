@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AuthAPI.Services.CookieHelper
+namespace FederatedIdentityDemo.Shared.Services.CookieHelper
 {
     public static class CookieHelper
     {
-        public static IActionResult AddCookie(this IActionResult result, HttpResponse response,string cookieKey, string sessionId)
+        public static IActionResult AddCookie(this IActionResult result, HttpResponse response, string cookieKey, string sessionId)
         {
             response.Cookies.Append(
                 cookieKey,

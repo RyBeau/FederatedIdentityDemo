@@ -20,7 +20,7 @@ namespace AuthAPI.Services.DB
             using (SHA256 sha256 = SHA256.Create())
             {
                 return _dbContext.Users
-                    .Where(s => s.Username == username && 
+                    .Where(s => s.Username == username &&
                         s.Password == Convert.ToHexString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password))))
                     .Join(_dbContext.Roles,
                         s => s.Role,

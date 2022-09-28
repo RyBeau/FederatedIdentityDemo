@@ -3,7 +3,7 @@ using AuthAPI;
 using Microsoft.AspNetCore;
 
 public class Program
-{ 
+{
     public static void Main(string[] args)
     {
         BuildWebHost(args).Run();

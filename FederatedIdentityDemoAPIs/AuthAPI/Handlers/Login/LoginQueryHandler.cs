@@ -1,6 +1,6 @@
 ﻿using AuthAPI.Responses;
 using AuthAPI.Services.DB;
-using AuthAPI.Services.Redis;
+using FederatedIdentityDemo.Shared.Services.Redis;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 

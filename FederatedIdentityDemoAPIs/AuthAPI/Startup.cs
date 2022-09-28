@@ -1,9 +1,7 @@
 ﻿using AuthAPI.Services.DB;
-using AuthAPI.Services.Redis;
+using FederatedIdentityDemo.Shared.Services.Redis;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using System.Diagnostics;
 
 namespace AuthAPI
 {
@@ -11,7 +9,7 @@ namespace AuthAPI
     {
         private IConfiguration _config;
 
-        public Startup (IConfiguration configuration)
+        public Startup(IConfiguration configuration)
         {
             _config = configuration;
         }
@@ -25,8 +23,8 @@ namespace AuthAPI
                 .AddMediatR(typeof(Startup));
 
             var dbConfig = _config.GetSection("database").Get<DbConfiguration>();
-            services.AddDbContext<Context>(options => 
-                options.UseMySql(dbConfig.GetConnectionString(), 
+            services.AddDbContext<Context>(options =>
+                options.UseMySql(dbConfig.GetConnectionString(),
                 ServerVersion.AutoDetect(dbConfig.GetConnectionString())
                 )
             );

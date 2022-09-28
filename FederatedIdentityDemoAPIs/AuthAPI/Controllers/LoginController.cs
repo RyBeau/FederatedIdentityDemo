@@ -1,13 +1,9 @@
 ﻿using AuthAPI.Handlers.Login;
 using AuthAPI.Handlers.Logout;
 using AuthAPI.Handlers.ValidateSession;
-using AuthAPI.Services.CookieHelper;
+using FederatedIdentityDemo.Shared.Services.CookieHelper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Net.Http.Headers;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
 
 namespace AuthAPI.Controllers
 {
@@ -23,7 +19,7 @@ namespace AuthAPI.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login ([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             var request = new LoginQuery()
             {
@@ -42,7 +38,7 @@ namespace AuthAPI.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout ()
+        public async Task<IActionResult> Logout()
         {
             var sessionId = GetSessionId();
 
