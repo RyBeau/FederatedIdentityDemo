@@ -1,12 +1,21 @@
-﻿using MediatR;
+﻿using AuthAPI.Responses;
+using AuthAPI.Services.Redis;
+using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace AuthAPI.Handlers.ValidateSession
 {
-    public class ValidateSessionHandler : IRequestHandler<ValidateSessionQuery, string>
+    public class ValidateSessionHandler : IRequestHandler<ValidateSessionQuery, UserSummary?>
     {
-        public Task<string> Handle(ValidateSessionQuery request, CancellationToken cancellationToken)
+        public readonly IDistributedCache _cache;
+        public ValidateSessionHandler(IDistributedCache cache)
         {
-            return Task.FromResult("Validated");
+            _cache = cache;
+        }
+
+        public Task<UserSummary?> Handle(ValidateSessionQuery request, CancellationToken cancellationToken)
+        {
+            return _cache.GetRecordAsync<UserSummary>(request.SessionId);
         }
     }
 }
