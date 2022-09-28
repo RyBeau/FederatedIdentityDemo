@@ -1,6 +1,8 @@
 ﻿using AuthAPI.Services.DB;
+using AuthAPI.Services.Redis;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using System.Diagnostics;
 
 namespace AuthAPI
@@ -28,6 +30,10 @@ namespace AuthAPI
                 ServerVersion.AutoDetect(dbConfig.GetConnectionString())
                 )
             );
+
+            var redisConfig = _config.GetSection("Redis").Get<RedisConfiguration>();
+
+            services.AddRedis(redisConfig);
 
             services.AddScoped<Repository>();
         }
