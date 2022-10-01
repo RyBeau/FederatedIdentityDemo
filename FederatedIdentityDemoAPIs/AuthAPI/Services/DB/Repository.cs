@@ -1,5 +1,5 @@
-﻿using AuthAPI.Responses;
-using AuthAPI.Services.DB.Models;
+﻿using AuthAPI.Services.DB.Models;
+using FederatedIdentityDemo.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
