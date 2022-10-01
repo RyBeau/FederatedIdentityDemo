@@ -1,4 +1,4 @@
-﻿using AuthAPI.Responses;
+﻿using FederatedIdentityDemo.Models;
 using MediatR;
 
 namespace AuthAPI.Handlers.Login

@@ -1,4 +1,5 @@
 ﻿using AuthAPI.Services.DB;
+using FederatedIdentityDemo.Shared.Auth;
 using FederatedIdentityDemo.Shared.Services.Redis;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ namespace AuthAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCacheAuthentication();
+
             services.AddControllers();
             services
                 .AddEndpointsApiExplorer()
@@ -47,6 +50,10 @@ namespace AuthAPI
                 .UseRouting()
                 .UseSwagger()
                 .UseSwaggerUI();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(x => x.MapControllers());
 
         }

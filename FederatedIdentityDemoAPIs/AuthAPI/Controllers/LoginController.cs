@@ -1,8 +1,9 @@
 ﻿using AuthAPI.Handlers.Login;
 using AuthAPI.Handlers.Logout;
 using AuthAPI.Handlers.ValidateSession;
-using FederatedIdentityDemo.Shared.Services.CookieHelper;
+using FederatedIdentityDemo.Shared.Auth;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthAPI.Controllers
@@ -19,28 +20,30 @@ namespace AuthAPI.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             var request = new LoginQuery()
             {
                 Username = loginRequest.Username,
                 Password = loginRequest.Password,
-                SessionId = GenerateSessionId()
+                SessionId = CacheAuthHelper.GenerateSessionId()
             };
 
             var result = await _mediator.Send(request);
             if (result != null)
             {
-                return Ok(result).AddCookie(Response, "session_id", request.SessionId);
+                return Ok(result).AddCookie(Response, CacheAuthConstants.CookieName, request.SessionId);
             }
 
             return NotFound();
         }
 
         [HttpPost("logout")]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
-            var sessionId = GetSessionId();
+            var sessionId = CacheAuthHelper.GetSessionId(Request);
 
             if (sessionId != null)
             {
@@ -51,43 +54,30 @@ namespace AuthAPI.Controllers
 
                 await _mediator.Send(request);
 
-                return Ok().RemoveCookie(Response, "session_id");
+                return Ok().RemoveCookie(Response, CacheAuthConstants.CookieName);
             }
             return Unauthorized();
         }
 
 
-        [HttpGet("authenticate")]
+        [HttpGet("role")]
+        [Authorize]
         public async Task<IActionResult> ValidateSession()
         {
-            var sessionId = GetSessionId();
 
-            if (sessionId != null)
+            var request = new ValidateSessionQuery()
             {
-                var request = new ValidateSessionQuery()
-                {
-                    SessionId = sessionId
-                };
-                var result = await _mediator.Send(request);
+                User = User,
+            };
+            var result = await _mediator.Send(request);
 
-                if (result == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(result);
+            if (result == null)
+            {
+                return NotFound();
             }
-            return Unauthorized();
-        }
 
-        private string GenerateSessionId()
-        {
-            return Guid.NewGuid().ToString();
-        }
+            return Ok(result);
 
-        private string? GetSessionId()
-        {
-            return Request.Cookies["session_id"];
         }
     }
 }
