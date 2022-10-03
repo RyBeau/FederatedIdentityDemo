@@ -14,11 +14,11 @@ namespace FederatedIdentityDemo.Shared.Auth
 
     }
 
-    public class CacheAuthorizationhandler : AuthenticationHandler<CacheAuthenticationOptions>
+    public class CacheAuthorizationHandler : AuthenticationHandler<CacheAuthenticationOptions>
     {
         private readonly IDistributedCache _cache;
 
-        public CacheAuthorizationhandler(
+        public CacheAuthorizationHandler(
                     IOptionsMonitor<CacheAuthenticationOptions> options,
                     ILoggerFactory logger,
                     UrlEncoder encoder,

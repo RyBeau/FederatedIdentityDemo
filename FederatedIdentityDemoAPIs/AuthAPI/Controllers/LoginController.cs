@@ -1,6 +1,6 @@
 ﻿using AuthAPI.Handlers.Login;
 using AuthAPI.Handlers.Logout;
-using AuthAPI.Handlers.ValidateSession;
+using AuthAPI.Handlers.Role;
 using FederatedIdentityDemo.Shared.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +21,7 @@ namespace AuthAPI.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginRequest loginRequest)
         {
             var request = new LoginQuery()
             {
@@ -41,7 +41,7 @@ namespace AuthAPI.Controllers
 
         [HttpPost("logout")]
         [Authorize]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> LogoutAsync()
         {
             var sessionId = CacheAuthHelper.GetSessionId(Request);
 
@@ -62,10 +62,10 @@ namespace AuthAPI.Controllers
 
         [HttpGet("role")]
         [Authorize]
-        public async Task<IActionResult> ValidateSession()
+        public async Task<IActionResult> GetRoleAsync()
         {
 
-            var request = new ValidateSessionQuery()
+            var request = new GetRoleQuery()
             {
                 User = User,
             };

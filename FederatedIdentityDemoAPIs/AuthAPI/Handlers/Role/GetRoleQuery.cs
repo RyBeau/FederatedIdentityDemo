@@ -2,9 +2,9 @@
 using MediatR;
 using System.Security.Claims;
 
-namespace AuthAPI.Handlers.ValidateSession
+namespace AuthAPI.Handlers.Role
 {
-    public class ValidateSessionQuery : IRequest<UserSummary>
+    public class GetRoleQuery : IRequest<UserSummary>
     {
         public ClaimsPrincipal User { get; set; }
     }

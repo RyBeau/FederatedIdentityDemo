@@ -9,7 +9,7 @@ namespace FederatedIdentityDemo.Shared.Auth
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CacheAuthConstants.SchemeName;
-            }).AddScheme<CacheAuthenticationOptions, CacheAuthorizationhandler>(CacheAuthConstants.SchemeName, option => { });
+            }).AddScheme<CacheAuthenticationOptions, CacheAuthorizationHandler>(CacheAuthConstants.SchemeName, option => { });
         }
     }
 }

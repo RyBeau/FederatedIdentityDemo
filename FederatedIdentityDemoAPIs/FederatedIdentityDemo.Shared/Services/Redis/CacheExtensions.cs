@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace FederatedIdentityDemo.Shared.Services.Redis
 {
-    public static class CacheHelper
+    public static class CacheExtensions
     {
         public static async Task SetRecordAsync<T>(this IDistributedCache cache, string key, T data)
         {
