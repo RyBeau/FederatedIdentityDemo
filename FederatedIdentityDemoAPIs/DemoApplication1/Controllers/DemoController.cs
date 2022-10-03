@@ -42,7 +42,7 @@ namespace DemoApplication1.Controllers
             return Ok(await SendRequest("Hi {0} this is Demo API 1, this endpoint allows any admin users. You are a {1}"));
         }
 
-        [Authorize(Roles = "none")]
+        [Authorize(Roles = "Admin,Developer")]
         [HttpGet]
         [Route("adminanddev")]
         public async Task<IActionResult> AdminOrDevAsync()
