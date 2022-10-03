@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+  auth_api:
+    image: auth_api
+    restart: unless-stopped
+    environment:
+      Database__username: "${DB_USER}"
+      Database__password: "${DB_PASSWORD}"
+      Database__host: "${DB_HOST}"
+      Database__port: "${DB_PORT}"
+      Database__name: "${DB_NAME}"
+      Redis__user: "${AUTH_REDIS_USER}"
+      Redis__password: "${AUTH_REDIS_PASSWORD}"
+      Redis__host: "${AUTH_REDIS_HOST}"
+      Redis__port: "${AUTH_REDIS_PORT}"
+      Redis__prefix: "${AUTH_REDIS_PREFIX}"
+      Redis__name: "${AUTH_REDIS_NAME}"
+      Redis__ssl: "${AUTH_REDIS_SSL}"
+      REDIS__TTL: "${AUTHREDIS_TTL}"
+    networks:
+      - frontend_proxy
+    labels:
+      - "traefik.enable=true"
+  demo_api_1:
+    image: demo_api_1
+    restart: unless-stopped
+    environment:
+      Redis__user: "${REDIS_USER}"
+      Redis__password: "${REDIS_PASSWORD}"
+      Redis__host: "${REDIS_HOST}"
+      Redis__port: "${REDIS_PORT}"
+      Redis__prefix: "${REDIS_PREFIX}"
+      Redis__name: "${REDIS_NAME}"
+      Redis__ssl: "${REDIS_SSL}"
+      REDIS__TTL: "${REDIS_TTL}"
+    networks:
+      - frontend_proxy
+    labels:
+      - "traefik.enable=true"
+  demo_api_2:
+    image: demo_api_2
+    restart: unless-stopped
+    environment:
+      Redis__user: "${REDIS_USER}"
+      Redis__password: "${REDIS_PASSWORD}"
+      Redis__host: "${REDIS_HOST}"
+      Redis__port: "${REDIS_PORT}"
+      Redis__prefix: "${REDIS_PREFIX}"
+      Redis__name: "${REDIS_NAME}"
+      Redis__ssl: "${REDIS_SSL}"
+      REDIS__TTL: "${REDIS_TTL}"
+    networks:
+      - frontend_proxy
+    labels:
+      - "traefik.enable=true"
+
+
+networks:
+  frontend_proxy:
+    external: true
