@@ -1,6 +1,7 @@
 ﻿using AuthAPI.Handlers.Login;
 using AuthAPI.Handlers.Logout;
 using AuthAPI.Handlers.Role;
+using AuthAPI.Requests;
 using FederatedIdentityDemo.Shared.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

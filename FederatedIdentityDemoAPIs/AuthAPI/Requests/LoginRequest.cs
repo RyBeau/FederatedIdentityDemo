@@ -1,4 +1,4 @@
-﻿namespace AuthAPI
+﻿namespace AuthAPI.Requests
 {
     public class LoginRequest
     {
