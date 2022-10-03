@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DemoApplication1.Controllers
 {
-    [Route("api/demo1")]
+    [Route("api")]
     [ApiController]
     [Authorize(Roles = "Admin,Developer,Basic")]
     public class DemoController : ControllerBase
