@@ -33,13 +33,13 @@ namespace DemoApplication1
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage()
+                    .UseSwagger()
+                    .UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection()
-                .UseRouting()
-                .UseSwagger()
-                .UseSwaggerUI();
+            app.UseRouting();
+                
 
             app.UseAuthentication();
             app.UseAuthorization();
