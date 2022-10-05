@@ -17,11 +17,16 @@ services:
       Redis__prefix: "${AUTH_REDIS_PREFIX}"
       Redis__name: "${AUTH_REDIS_NAME}"
       Redis__ssl: "${AUTH_REDIS_SSL}"
-      REDIS__TTL: "${AUTHREDIS_TTL}"
+      REDIS__TTL: "${AUTH_REDIS_TTL}"
     networks:
-      - frontend_proxy
+      - traefik_proxy
     labels:
-      - "traefik.enable=true"
+      traefik.enable: true
+      traefik.http.routers.sso_auth_api.rule: Host(`ssodemo.local.rybeau.nz`) && PathPrefix(`/api/auth`)
+      traefik.http.routers.sso_auth_api.entrypoints: websecure
+      traefik.http.routers.sso_auth_api.tls: true
+      traefik.http.services.sso_auth_api.loadbalancer.server.port: 8080
+
   demo_api_1:
     image: demo_api_1
     restart: unless-stopped
@@ -35,9 +40,14 @@ services:
       Redis__ssl: "${REDIS_SSL}"
       REDIS__TTL: "${REDIS_TTL}"
     networks:
-      - frontend_proxy
+      - traefik_proxy
     labels:
-      - "traefik.enable=true"
+      traefik.enable: true
+      traefik.http.routers.sso_demo_api_1.rule: Host(`ssodemo.local.rybeau.nz`) && PathPrefix(`/api/demo1`)
+      traefik.http.routers.sso_demo_api_1.entrypoints: websecure
+      traefik.http.routers.sso_demo_api_1.tls: true
+      traefik.http.services.sso_demo_api_1.loadbalancer.server.port: 8080
+      
   demo_api_2:
     image: demo_api_2
     restart: unless-stopped
@@ -51,11 +61,23 @@ services:
       Redis__ssl: "${REDIS_SSL}"
       REDIS__TTL: "${REDIS_TTL}"
     networks:
-      - frontend_proxy
+      - traefik_proxy
     labels:
-      - "traefik.enable=true"
+      traefik.enable: true
+      traefik.http.routers.sso_demo_api_2.rule: Host(`ssodemo.local.rybeau.nz`) && PathPrefix(`/api/demo2`)
+      traefik.http.routers.sso_demo_api_2.entrypoints: websecure
+      traefik.http.routers.sso_demo_api_2.tls: true
+      traefik.http.services.sso_demo_api_2.loadbalancer.server.port: 8080
 
+  sso_redis:
+    image: sso_redis
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    ports:
+      - "5002:6379"
 
+      
 networks:
-  frontend_proxy:
+  traefik_proxy:
     external: true
