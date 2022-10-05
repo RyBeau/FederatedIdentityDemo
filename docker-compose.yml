@@ -74,9 +74,12 @@ services:
     restart: unless-stopped
     networks:
       - traefik_proxy
-    ports:
-      - "5002:6379"
-
+    labels:
+      traefik.enable: true
+      traefik.tcp.routers.sso_redis.rule: HostSNI(`*`)
+      traefik.tcp.routers.sso_redis.entrypoints: caching
+      traefik.tcp.routers.sso_redis.tls: false
+      traefik.tcp.services.sso_redis.loadbalancer.server.port: 6379
       
 networks:
   traefik_proxy:
