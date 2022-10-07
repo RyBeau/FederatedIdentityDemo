@@ -1,0 +1,108 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-api-2
+  namespace: sso-demo
+spec:
+  selector:
+    matchLabels:
+      app: demo-api-2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: demo-api-2
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: demo-api-2
+        image: demo_api_2:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: api
+          containerPort: 8080
+        env:
+          - name: Redis__host
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_HOST
+          - name: Redis__port
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_PORT
+          - name: Redis__prefix
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_PREFIX
+          - name: Redis__name
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_NAME
+          - name: Redis__ssl
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_SSL
+          - name: REDIS__TTL
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_TTL
+          - name: Redis__user
+            valueFrom:
+              secretKeyRef:
+                name: sso-demo-secrets
+                key: API_REDIS_USER
+                optional: false
+          - name: Redis__password
+            valueFrom:
+              secretKeyRef:
+                name: sso-demo-secrets
+                key: API_REDIS_PASSWORD
+                optional: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-api-2-service
+  namespace: sso-demo
+spec:
+  type: ClusterIP
+  selector:
+    app: demo-api-2
+  ports:
+  - name: websecure
+    port: 443
+    targetPort: api
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-api-2-ingress
+  namespace: sso-demo
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$1
+  labels:
+    name: demo-api-2-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "ssodemo.local.rybeau.nz"
+    http:
+      paths:
+      - pathType: Prefix
+        path: /api/demo2/(.*)
+        backend:
+          service:
+            name: demo-api-2-service
+            port: 
+              name: websecure

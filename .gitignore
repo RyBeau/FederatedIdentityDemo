@@ -1,3 +1,5 @@
 /redis
 .env
 .vs
+.config
+.secret

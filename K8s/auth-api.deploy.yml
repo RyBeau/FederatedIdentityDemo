@@ -1,0 +1,133 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-api
+  namespace: sso-demo
+spec:
+  selector:
+    matchLabels:
+      app: auth-api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: auth-api
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: auth-api
+        image: auth_api:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - name: api
+          containerPort: 8080
+        env:
+          - name: Database__host
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: DB_HOST
+          - name: Database__port
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: DB_PORT
+          - name: Database__name
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: DB_NAME
+          - name: Database__username
+            valueFrom:
+              secretKeyRef:
+                name: sso-demo-secrets
+                key: DB_USER
+                optional: false
+          - name: Database__password
+            valueFrom:
+              secretKeyRef:
+                name: sso-demo-secrets
+                key: DB_PASSWORD
+                optional: false
+          - name: Redis__host
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_HOST
+          - name: Redis__port
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_PORT
+          - name: Redis__prefix
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_PREFIX
+          - name: Redis__name
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_NAME
+          - name: Redis__ssl
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_SSL
+          - name: REDIS__TTL
+            valueFrom:
+              configMapKeyRef:
+                name: sso-demo-config
+                key: REDIS_TTL
+          - name: Redis__user
+            valueFrom:
+              secretKeyRef:
+                name: sso-demo-secrets
+                key: AUTH_REDIS_USER
+                optional: false
+          - name: Redis__password
+            valueFrom:
+              secretKeyRef:
+                name: sso-demo-secrets
+                key: AUTH_REDIS_PASSWORD
+                optional: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-api-service
+  namespace: sso-demo
+spec:
+  type: ClusterIP
+  selector:
+    app: auth-api
+  ports:
+  - name: websecure
+    port: 443
+    targetPort: api
+--- 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: auth-api-ingress
+  namespace: sso-demo
+  labels:
+    name: auth-api-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "ssodemo.local.rybeau.nz"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/api/auth/"
+        backend:
+          service:
+            name: auth-api-service
+            port: 
+              name: websecure
