@@ -96,7 +96,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: "ssodemo.local.rybeau.nz"
+  - host: ssodemo.local.rybeau.nz
     http:
       paths:
       - pathType: Prefix
