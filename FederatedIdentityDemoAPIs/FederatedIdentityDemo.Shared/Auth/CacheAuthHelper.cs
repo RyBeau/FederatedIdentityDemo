@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Security.Cryptography;
 
 namespace FederatedIdentityDemo.Shared.Auth
 {
@@ -6,7 +7,8 @@ namespace FederatedIdentityDemo.Shared.Auth
     {
         public static string GenerateSessionId()
         {
-            return Guid.NewGuid().ToString();
+            var keyBytes = RandomNumberGenerator.GetBytes(32);
+            return Convert.ToBase64String(keyBytes);
         }
 
         public static string? GetSessionId(HttpRequest request)
